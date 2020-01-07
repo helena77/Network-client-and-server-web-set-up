@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
 	
 	// Get the host name
 	string host_and_path = request_info.substr(request_info.find('/') + 2);
-	//cout << host_and_path << endl;
+	
 	char a = '/';
 	bool exist = false;
 	for (unsigned i = 0; i < host_and_path.size(); i++) {
@@ -65,24 +65,21 @@ int main(int argc, char *argv[])
 			exist = true;
 		}
 	}
-	//cerr << exist << endl;
+	
 	if (!exist) {		
 		request_path = "";		
 	}
 	else {
 		request_path = host_and_path.substr(host_and_path.find('/') + 1);
 	}	
-	//cerr << port << endl;
-	//cerr << request_path << endl;	
+	
 	int len_1 = host_and_path.size();
 	int len_2 = request_path.size();
 	if (exist) {
 		len_2 = request_path.size() + 1;
 	}	
-	int len_3 = len_1 - len_2;
-	//cerr << "len1: " << len_1 << " len2: " << len_2 << " len3: " << len_3 << endl;
+	int len_3 = len_1 - len_2;	
 	request_hostname = host_and_path.substr(0, len_3);	
-	//cerr << request_hostname << endl;
 	
 	// Assign port to socket
 	char b = ':';
@@ -99,9 +96,6 @@ int main(int argc, char *argv[])
 		port = request_hostname.substr(request_hostname.find(':') + 1);
 		request_hostname = request_hostname.substr(0, request_hostname.find(':'));
 	}	
-	//cout << request_hostname << endl;
-	//cout << request_path << endl;
-	//cout << port << endl;
 
 	// Obtain address matching host/port
 	memset(&hints, 0, sizeof(struct addrinfo));
@@ -201,7 +195,6 @@ int main(int argc, char *argv[])
 	
 
 	string receiverMsg = buffer;
-	//cerr << receiveMsg.length() << endl;
 	
 	// get content length
 	if (receiverMsg.find("Content-Length:") != std::string::npos) {
@@ -212,7 +205,6 @@ int main(int argc, char *argv[])
 		string text = "Content-Length: ";
 		string length = content_length.substr(text.size());	
 		int body_length = atoi(length.c_str());		
-		//cerr << body_length << endl;
 	
 		// get content body	
 		cerr << "Body: \n";		
@@ -222,7 +214,6 @@ int main(int argc, char *argv[])
 		char *rev_body_bp = rev_body_buffer;
 		while (rev_body_bytesLeft) {
 			int bytesRecv = recv(sockfd, rev_body_bp, rev_body_bytesLeft, 0);
-			//cerr << bytesRecv << endl;
 			if (bytesRecv <= 0) {
 				cerr << "ERROR reading from socket\n";
 				exit(-1);
@@ -231,8 +222,6 @@ int main(int argc, char *argv[])
 			rev_body_bp = rev_body_bp + bytesRecv;
 		}
 		cout.write(rev_body_buffer, body_length);
-		//cout << receive_body.substr(0, body_length - 1) << endl;
-		//cerr << receive_body.length();
 	}
 	
 			
